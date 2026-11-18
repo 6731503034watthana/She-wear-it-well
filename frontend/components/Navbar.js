@@ -10,7 +10,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const inSeller = pathname.startsWith('/seller');
-  const bare = pathname === '/' || pathname === '/login' || pathname === '/register'; // หน้าเลือกบทบาท/ล็อกอิน: ไม่โชว์เมนู
+  const bare = pathname === '/' || pathname === '/login' || pathname === '/register' || pathname === '/contact'; // หน้าเลือกบทบาท/ล็อกอิน: ไม่โชว์เมนู
   const buyerArea = !inSeller && !bare;
 
   const doLogout = () => {
