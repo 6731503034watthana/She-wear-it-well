@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>She wear it well | บริการเช่าชุดแฟชั่นออนไลน์</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#111111',
+                            charcoal: '#18181B',
+                            pinkLight: '#FDF2F8',
+                            pinkSoft: '#FCE7F3',
+                            pinkMedium: '#FBCFE8',
+                            pinkAccent: '#F472B6',
+                            pinkDark: '#DB2777',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #FFFFFF;
+            color: #111111;
+            overflow-x: hidden;
+        }
+        .font-brand {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDF2F8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FBCFE8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F472B6;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-white selection:bg-brand-pinkMedium selection:text-brand-black">
+
+    <!-- Toast Notification Container (แทน alert) -->
+    <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-[90%] max-w-md pointer-events-none"></div>
+
+    <!-- ===================================================================== -->
+    <!-- 1. CUSTOMER INFO GATE (หน้าลงทะเบียนข้อมูลลูกค้าก่อนเริ่มช้อป)            -->
+    <!-- ===================================================================== -->
+    <!-- ROLE SELECT (หน้าเลือกบทบาท: ผู้ซื้อ / ผู้ขาย) -->
+    <div id="role-screen" class="fixed inset-0 z-[70] bg-brand-black flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-2xl my-auto animate-fade-in">
+            <div class="text-center mb-8">
+                <span class="inline-block px-3 py-1 rounded-full bg-brand-pinkSoft/15 text-brand-pinkMedium text-xs tracking-widest uppercase mb-3 border border-brand-pinkMedium/30">Online Dress Rental</span>
+                <h1 class="font-brand text-4xl sm:text-5xl font-bold text-white">She wear it well</h1>
+                <p class="text-sm text-gray-300 mt-3 font-light">เข้าสู่ระบบโดยเลือกบทบาทของคุณ</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button type="button" onclick="selectRole('buyer')"
+                    class="group text-left bg-white rounded-3xl p-6 border-2 border-transparent hover:border-brand-pinkAccent shadow-2xl transition transform hover:-translate-y-1">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-pinkSoft text-brand-pinkDark flex items-center justify-center mb-4">
+                        <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-brand-black">ผู้ซื้อ (ลูกค้า)</h2>
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">เลือกชุด เช็กวันว่าง ใส่ตะกร้า ชำระเงินผ่าน QR และแนบสลิป</p>
+                    <span class="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-brand-pinkDark group-hover:gap-2 transition-all">เข้าสู่หน้าร้าน <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+                </button>
+                <button type="button" onclick="selectRole('seller')"
+                    class="group text-left bg-white rounded-3xl p-6 border-2 border-transparent hover:border-brand-pinkAccent shadow-2xl transition transform hover:-translate-y-1">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-black text-brand-pinkMedium flex items-center justify-center mb-4">
+                        <i data-lucide="store" class="w-7 h-7"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-brand-black">ผู้ขาย (เจ้าของร้าน)</h2>
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">ดูออเดอร์และสลิป อัปเดตสถานะจัดส่ง จัดการสินค้าและคิวจอง</p>
+                    <span class="inline-flex items-center gap-1 mt-4 text-xs font-semibold text-brand-pinkDark group-hover:gap-2 transition-all">เข้าสู่หลังบ้าน <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+                </button>
+            </div>
+            <p class="text-center text-[11px] text-gray-500 mt-6">เวอร์ชันสาธิต (Demo) • ข้อมูลเก็บในหน้าเว็บชั่วคราว</p>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SELLER APP (หลังบ้านผู้ขาย)                                             -->
+    <!-- ===================================================================== -->
+    <div id="seller-app" class="hidden flex-col min-h-screen bg-gray-50">
+        <header class="sticky top-0 z-30 bg-brand-black text-white shadow">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-brand-black text-brand-pinkMedium flex items-center justify-center font-brand font-bold text-lg border border-brand-pinkAccent">S</div>
+                    <div>
+                        <h1 class="font-brand text-lg sm:text-xl font-bold leading-none">She wear it well</h1>
+                        <p class="text-[10px] text-brand-pinkMedium tracking-wider uppercase mt-0.5">Seller Dashboard</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-medium flex items-center gap-1.5 transition">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> ออกจากระบบ
+                </button>
+            </div>
+        </header>
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 space-y-5">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="seller-stats"></div>
+            <div class="flex gap-2">
+                <button id="stab-orders" onclick="setSellerTab('orders')" class="px-4 py-2 rounded-full text-sm font-medium"></button>
+                <button id="stab-products" onclick="setSellerTab('products')" class="px-4 py-2 rounded-full text-sm font-medium"></button>
+            </div>
+            <div id="seller-content" class="space-y-4"></div>
+        </main>
+    </div>
+
+    <div id="customer-gate" class="hidden fixed inset-0 z-50 bg-brand-black/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-brand-pinkMedium animate-fade-in my-auto">
+            <!-- Header Banner -->
+            <div class="bg-brand-black text-white p-7 text-center relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-pinkAccent/20 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-brand-pinkSoft/20 rounded-full blur-2xl"></div>
+                
+                <span class="inline-block px-3 py-1 rounded-full bg-brand-pinkSoft/15 text-brand-pinkMedium text-xs tracking-widest uppercase mb-2 border border-brand-pinkMedium/30">
+                    Online Dress Rental
+                </span>
+                <h1 class="font-brand text-3xl sm:text-4xl font-bold tracking-wide text-white">
+                    She wear it well
+                </h1>
+                <p class="text-xs sm:text-sm text-gray-300 mt-2 font-light">
+                    บริการเช่าชุดแฟชั่นสุดชิค ขับรถส่งตรงถึงหน้าหอพักคุณ 🚗💨
+                </p>
+            </div>
+
+            <!-- Form Body -->
+            <form id="customer-form" class="p-6 sm:p-8 space-y-4">
+                <div class="bg-brand-pinkLight border border-brand-pinkMedium rounded-2xl p-3.5 flex items-start gap-3">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-brand-pinkDark shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-gray-700 leading-relaxed">
+                        กรุณากรอกข้อมูลจัดส่งเบื้องต้นก่อนเลือกชมชุด <span class="font-medium text-brand-black">(ใช้ชื่อเล่นได้เลยค่ะ)</span> เพื่อให้ทางร้านจัดคิวขับรถไปส่งให้คุณได้อย่างถูกต้อง
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">ชื่อเล่นของคุณ <span class="text-brand-pinkDark">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="input-nickname" required placeholder="เช่น น้องมายด์, พี่พลอย"
+                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-pinkAccent focus:bg-white transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">เบอร์โทรศัพท์ติดต่อ <span class="text-brand-pinkDark">*</span></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                        </span>
+                        <input type="tel" id="input-phone" required placeholder="เช่น 089-xxx-xxxx"
+                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-pinkAccent focus:bg-white transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">ที่อยู่จัดส่ง (ชื่อหอพัก / เลขห้อง / จุดนัดรับ) <span class="text-brand-pinkDark">*</span></label>
+                    <div class="relative">
+                        <span class="absolute top-3.5 left-3.5 text-gray-400">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        </span>
+                        <textarea id="input-address" rows="2" required placeholder="เช่น หอพักบ้านสวน ห้อง 304 (ส่งหน้าหอได้เลยค่ะ)"
+                            class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-pinkAccent focus:bg-white transition"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" id="gate-submit-btn"
+                    class="w-full py-3.5 bg-brand-black hover:bg-gray-900 text-white font-medium rounded-xl shadow-lg shadow-brand-pinkMedium/40 flex items-center justify-center gap-2 transition transform active:scale-[0.98] mt-2">
+                    <span>เข้าสู่หน้าร้านเช่าชุด</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-brand-pinkAccent"></i>
+                </button>
+                <button type="button" onclick="logout()" class="w-full text-xs text-gray-500 hover:text-brand-pinkDark underline">← เปลี่ยนบทบาท / ออกจากระบบ</button>
+            </form>
+
+            <!-- Contact Info inside Gate -->
+            <div class="bg-brand-pinkLight/70 px-6 py-3.5 border-t border-brand-pinkSoft text-center">
+                <p class="text-[11px] text-gray-600">
+                    สอบถามเพิ่มเติม ทักมาทางร้านได้ที่
+                </p>
+                <div class="flex items-center justify-center gap-3 mt-1 text-xs font-medium text-brand-black">
+                    <button type="button" onclick="copyText('@936ilcuu', 'คัดลอก Line ID: @936ilcuu แล้ว')" class="flex items-center gap-1 hover:text-brand-pinkDark transition">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Line: @936ilcuu
+                    </button>
+                    <span class="text-gray-300">|</span>
+                    <button type="button" onclick="copyText('swiw.offi', 'คัดลอก IG: swiw.offi แล้ว')" class="flex items-center gap-1 hover:text-brand-pinkDark transition">
+                        <i data-lucide="instagram" class="w-3.5 h-3.5 text-brand-pinkDark"></i> IG: swiw.offi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MAIN APP CONTAINER (หน้าหลักร้านค้า)                                    -->
+    <!-- ===================================================================== -->
+    <div id="main-app" class="hidden flex-col min-h-screen">
+        
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-brand-pinkSoft shadow-sm">
+            <!-- Top Contact Strip -->
+            <div class="bg-brand-black text-white text-[11px] sm:text-xs py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+                <span class="text-brand-pinkMedium">หากต้องการสอบถามเพิ่มเติม ทักมาทางร้าน:</span>
+                <button onclick="copyText('@936ilcuu', 'คัดลอก Line ID: @936ilcuu แล้ว')" class="font-medium hover:text-brand-pinkAccent underline decoration-brand-pinkAccent/60 transition">
+                    Line: @936ilcuu
+                </button>
+                <span class="text-gray-500">|</span>
+                <button onclick="copyText('swiw.offi', 'คัดลอก IG: swiw.offi แล้ว')" class="font-medium hover:text-brand-pinkAccent underline decoration-brand-pinkAccent/60 transition">
+                    IG: swiw.offi
+                </button>
+            </div>
+
+            <!-- Main Header -->
+            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+                <!-- Brand Logo -->
+                <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchView('catalog')">
+                    <div class="w-9 h-9 rounded-full bg-brand-black text-brand-pinkMedium flex items-center justify-center font-brand font-bold text-lg border border-brand-pinkAccent">
+                        S
+                    </div>
+                    <div>
+                        <h1 class="font-brand text-xl sm:text-2xl font-bold tracking-tight text-brand-black leading-none">
+                            She wear it well
+                        </h1>
+                        <p class="text-[10px] text-gray-500 tracking-wider uppercase mt-0.5">Fashion Rental Studio</p>
+                    </div>
+                </div>
+
+                <!-- Right Actions: Customer Pill, Admin Mode, Cart Button -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Customer Info Badge (Clickable to Edit) -->
+                    <button onclick="openEditCustomerModal()" title="คลิกเพื่อแก้ไขข้อมูลจัดส่ง"
+                        class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-pinkLight hover:bg-brand-pinkSoft border border-brand-pinkMedium text-xs text-brand-black transition">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-pinkDark"></i>
+                        <span id="header-customer-name" class="font-medium max-w-[120px] truncate">ลูกค้า</span>
+                        <i data-lucide="edit-3" class="w-3 h-3 text-gray-400"></i>
+                    </button>
+
+                    <!-- Logout Button -->
+                    <button onclick="logout()" title="ออกจากระบบ"
+                        class="px-2.5 py-1.5 rounded-xl border border-gray-200 hover:border-brand-black text-[11px] font-medium text-gray-600 hover:text-brand-black flex items-center gap-1.5 transition">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5 text-brand-pinkDark"></i>
+                        <span class="hidden sm:inline">ออกจากระบบ</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button onclick="openCartDrawer()" 
+                        class="relative px-3.5 py-2 rounded-xl bg-brand-black hover:bg-gray-800 text-white text-xs sm:text-sm font-medium flex items-center gap-2 shadow-sm transition active:scale-95">
+                        <i data-lucide="shopping-bag" class="w-4 h-4 text-brand-pinkMedium"></i>
+                        <span>ตะกร้า</span>
+                        <span id="cart-count-badge" class="bg-brand-pinkAccent text-brand-black font-bold text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                            0
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Customer Strip -->
+            <div class="md:hidden bg-brand-pinkLight/80 px-4 py-1.5 border-t border-brand-pinkSoft flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1.5 truncate pr-2">
+                    <i data-lucide="truck" class="w-3.5 h-3.5 text-brand-pinkDark shrink-0"></i>
+                    <span class="text-gray-600">ส่งที่:</span>
+                    <span id="mobile-customer-summary" class="font-medium text-brand-black truncate">-</span>
+                </div>
+                <button onclick="openEditCustomerModal()" class="text-brand-pinkDark font-medium underline shrink-0 text-[11px]">
+                    แก้ไขข้อมูล
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Mini Banner -->
+        <section class="bg-gradient-to-r from-brand-black via-brand-charcoal to-brand-black text-white py-6 px-4 relative overflow-hidden">
+            <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+                <div>
+                    <span class="inline-block px-2.5 py-0.5 rounded-full bg-brand-pinkAccent/20 text-brand-pinkMedium text-[11px] font-medium mb-2 border border-brand-pinkAccent/30">
+                        ✨ เช่าสวยแบบไม่ต้องซื้อซ้ำ
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-semibold">
+                        เลือกแมตช์ลุคโปรดของคุณ <span class="text-brand-pinkMedium font-brand italic">She wear it well</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-gray-300 mt-1 font-light">
+                        เช็กวันว่างได้ทันที กดเลือกชุดเซต ท่อนบน-ล่าง พร้อมแอคเซสเซอรี่และกระเป๋าในออเดอร์เดียว
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-2xl border border-white/15 shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-brand-pinkMedium text-brand-black flex items-center justify-center">
+                        <i data-lucide="car" class="w-4 h-4"></i>
+                    </div>
+                    <div class="text-xs">
+                        <p class="font-medium text-brand-pinkMedium">บริการขับรถส่งถึงที่</p>
+                        <p class="text-gray-300 text-[11px]">ส่งตรงหน้าหอพัก / จุดนัดรับ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Tabs Navigation -->
+        <div class="sticky top-[93px] md:top-[85px] z-20 bg-white border-b border-gray-100 shadow-sm">
+            <div class="max-w-6xl mx-auto px-4 py-3">
+                <div id="category-tabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+                    <!-- Categories rendered via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid Section -->
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-8">
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <h3 id="current-category-title" class="text-lg sm:text-xl font-semibold text-brand-black">
+                        ชุดและไอเทมทั้งหมด (All Items)
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-0.5">กดที่รูปภาพหรือปุ่ม "ดูรายละเอียด / เช็กวันว่าง" เพื่อเลือกวันเช่า</p>
+                </div>
+                <span id="product-count-label" class="text-xs font-medium px-3 py-1 rounded-full bg-brand-pinkLight text-brand-pinkDark">
+                    0 รายการ
+                </span>
+            </div>
+
+            <!-- Grid -->
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+                <!-- Products rendered via JS -->
+            </div>
+        </main>
+
+        <!-- Persistent Footer with Shop Contact -->
+        <footer class="bg-brand-black text-white border-t border-gray-800 mt-12">
+            <div class="max-w-6xl mx-auto px-4 py-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center md:text-left">
+                        <h4 class="font-brand text-2xl font-bold text-white">She wear it well</h4>
+                        <p class="text-xs text-gray-400 mt-1">ร้านเช่าชุดแฟชั่นออนไลน์ สวยครบจบในที่เดียว พร้อมบริการขับรถจัดส่งถึงหอพัก</p>
+                    </div>
+
+                    <div class="bg-brand-charcoal border border-brand-pinkAccent/30 rounded-2xl p-4 text-center sm:text-left flex flex-col sm:flex-row items-center gap-4">
+                        <div class="text-xs">
+                            <p class="text-brand-pinkMedium font-medium">หากต้องการสอบถามเพิ่มเติม ทักมาทางร้านได้เลยค่ะ 💕</p>
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2">
+                                <button onclick="copyText('@936ilcuu', 'คัดลอก Line ID: @936ilcuu แล้ว')" 
+                                    class="px-3 py-1.5 rounded-lg bg-green-600/20 border border-green-500/40 text-green-300 hover:bg-green-600/30 text-xs font-medium flex items-center gap-1.5 transition">
+                                    <span>Line: @936ilcuu</span>
+                                    <i data-lucide="copy" class="w-3 h-3"></i>
+                                </button>
+                                <button onclick="copyText('swiw.offi', 'คัดลอก IG: swiw.offi แล้ว')" 
+                                    class="px-3 py-1.5 rounded-lg bg-pink-600/20 border border-pink-500/40 text-pink-300 hover:bg-pink-600/30 text-xs font-medium flex items-center gap-1.5 transition">
+                                    <span>IG: swiw.offi</span>
+                                    <i data-lucide="copy" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-800 mt-6 pt-4 text-center text-[11px] text-gray-500">
+                    © 2026 She wear it well. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 2. PRODUCT DETAIL & CALENDAR MODAL (หน้ารายละเอียดชุดและเช็กวันว่าง)      -->
+    <!-- ===================================================================== -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden my-auto animate-fade-in border border-brand-pinkMedium max-h-[92vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="px-5 py-3.5 bg-brand-black text-white flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <span id="modal-cat-badge" class="px-2.5 py-0.5 rounded-full bg-brand-pinkAccent text-brand-black text-[11px] font-semibold">
+                        หมวดหมู่
+                    </span>
+                    <span class="text-xs text-gray-300">รายละเอียดชุด & เช็กวันว่าง</span>
+                </div>
+                <button onclick="closeProductModal()" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Left: Image & Shop Original Price -->
+                    <div class="md:col-span-5 space-y-3">
+                        <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-brand-pinkLight border border-brand-pinkSoft">
+                            <img id="modal-img" src="" alt="Product Image" class="w-full h-full object-cover"
+                                onerror="this.src='https://placehold.co/600x800/FCE7F3/111111?text=She+wear+it+well'">
+                            <!-- Original Shop Price Tag -->
+                            <div class="absolute bottom-3 left-3 right-3 bg-brand-black/85 backdrop-blur-md text-white p-2.5 rounded-xl border border-white/15">
+                                <p class="text-[10px] text-brand-pinkMedium uppercase tracking-wider">ราคาป้ายจากช้อป (Original Price)</p>
+                                <p id="modal-shop-price" class="text-sm font-semibold text-white">1,290 THB</p>
+                            </div>
+                        </div>
+
+                        <!-- Size & Measurements Box -->
+                        <div class="bg-brand-pinkLight/70 border border-brand-pinkMedium rounded-2xl p-3.5">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-semibold text-brand-black flex items-center gap-1.5">
+                                    <i data-lucide="ruler" class="w-3.5 h-3.5 text-brand-pinkDark"></i> ไซส์และสัดส่วนชุด
+                                </span>
+                                <span id="modal-size-badge" class="px-2 py-0.5 bg-brand-black text-white text-xs font-bold rounded-md">
+                                    S / M
+                                </span>
+                            </div>
+                            <p id="modal-measurements" class="text-xs text-gray-600 leading-relaxed mt-1">
+                                อก 32-34" | เอว 25-27" | สะโพก 35-37"
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Pricing Tiers, Calendar & Add to Cart -->
+                    <div class="md:col-span-7 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h2 id="modal-title" class="text-xl sm:text-2xl font-bold text-brand-black">ชื่อชุด</h2>
+                            <p id="modal-desc" class="text-xs text-gray-500 mt-1 leading-relaxed">รายละเอียดชุด</p>
+
+                            <!-- Step 1: Select Rental Duration Package -->
+                            <div class="mt-4">
+                                <label class="block text-xs font-semibold text-brand-black mb-2">
+                                    1. เลือกจำนวนวันที่ต้องการเช่า (เรทราคาสุดคุ้ม)
+                                </label>
+                                <div id="rental-tiers-container" class="grid grid-cols-3 gap-2">
+                                    <!-- Tier buttons rendered via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Interactive Availability Calendar -->
+                            <div class="mt-5">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="text-xs font-semibold text-brand-black">
+                                        2. เลือกวันเริ่มเช่า (เช็กวันว่าง/ติดจอง)
+                                    </label>
+                                    <div class="flex items-center gap-1">
+                                        <button type="button" onclick="changeCalendarMonth(-1)" class="p-1 rounded-lg border border-gray-200 hover:bg-gray-100">
+                                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                        </button>
+                                        <span id="calendar-month-label" class="text-xs font-medium px-2 min-w-[100px] text-center">
+                                            พฤศจิกายน 2026
+                                        </span>
+                                        <button type="button" onclick="changeCalendarMonth(1)" class="p-1 rounded-lg border border-gray-200 hover:bg-gray-100">
+                                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Calendar Legend -->
+                                <div class="flex items-center gap-4 text-[11px] mb-2 bg-gray-50 px-3 py-1.5 rounded-lg">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-white border border-gray-300"></span> ว่าง (เลือกได้)
+                                    </span>
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-brand-pinkAccent"></span> วันที่คุณเลือก
+                                    </span>
+                                    <span class="flex items-center gap-1.5 text-red-500">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-red-100 border border-red-300"></span> ถูกเช่าแล้ว
+                                    </span>
+                                </div>
+
+                                <!-- Calendar Grid -->
+                                <div class="border border-gray-200 rounded-2xl p-3 bg-white">
+                                    <div class="grid grid-cols-7 text-center text-[11px] font-medium text-gray-400 mb-1.5">
+                                        <div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div>
+                                    </div>
+                                    <div id="calendar-days-grid" class="grid grid-cols-7 gap-1 text-center text-xs">
+                                        <!-- Calendar days rendered via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Selected Summary & Action Buttons -->
+                        <div class="pt-3 border-t border-gray-100 space-y-3">
+                            <div id="selected-date-summary" class="bg-brand-pinkLight border border-brand-pinkMedium rounded-xl p-3 flex items-center justify-between text-xs">
+                                <span class="text-gray-600">กรุณาจิ้มเลือกวันเริ่มเช่าในปฏิทินด้านบน</span>
+                                <span class="font-bold text-brand-black">-</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <button type="button" onclick="addCurrentProductToCart(false)"
+                                    class="w-full py-3 px-4 bg-brand-black hover:bg-gray-800 text-white text-xs sm:text-sm font-medium rounded-xl shadow-md flex items-center justify-center gap-2 transition active:scale-[0.98]">
+                                    <i data-lucide="shopping-bag" class="w-4 h-4 text-brand-pinkMedium"></i>
+                                    <span>เพิ่มลงตะกร้า</span>
+                                </button>
+                                <button type="button" onclick="addCurrentProductToCart(true)"
+                                    class="w-full py-3 px-4 bg-brand-pinkSoft hover:bg-brand-pinkMedium text-brand-black text-xs sm:text-sm font-medium rounded-xl border border-brand-pinkAccent/40 flex items-center justify-center gap-1.5 transition active:scale-[0.98]">
+                                    <i data-lucide="sparkles" class="w-4 h-4 text-brand-pinkDark"></i>
+                                    <span>เพิ่ม & เลือกแอคเซสเซอรี่เพิ่ม</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Contact Footer -->
+            <div class="bg-brand-pinkLight px-5 py-2.5 border-t border-brand-pinkSoft text-center text-[11px] text-gray-600 shrink-0">
+                สอบถามไซส์หรือคิวชุดเพิ่มเติม ทักร้านได้ที่ <strong class="text-brand-black">Line: @936ilcuu</strong> | <strong class="text-brand-black">IG: swiw.offi</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 3. SHOPPING CART DRAWER (หน้าตะกร้าสินค้าและการรวมยอด)                    -->
+    <!-- ===================================================================== -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex justify-end">
+        <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl animate-fade-in">
+            <!-- Cart Header -->
+            <div class="bg-brand-black text-white p-5 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-pinkMedium"></i>
+                    <div>
+                        <h3 class="font-semibold text-base">ตะกร้าเช่าชุดของคุณ</h3>
+                        <p class="text-[11px] text-brand-pinkMedium">She wear it well</p>
+                    </div>
+                </div>
+                <button onclick="closeCartDrawer()" class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Customer Delivery Summary Box -->
+            <div class="bg-brand-pinkLight p-4 border-b border-brand-pinkMedium shrink-0">
+                <div class="flex items-start justify-between gap-2">
+                    <div class="text-xs space-y-0.5">
+                        <p class="font-semibold text-brand-black flex items-center gap-1.5">
+                            <i data-lucide="car" class="w-3.5 h-3.5 text-brand-pinkDark"></i> ข้อมูลจัดส่ง (ร้านขับรถส่งเอง)
+                        </p>
+                        <p class="text-gray-700"><span class="font-medium">คุณ:</span> <span id="cart-cust-name">-</span> (<span id="cart-cust-phone">-</span>)</p>
+                        <p class="text-gray-600"><span class="font-medium">ส่งที่:</span> <span id="cart-cust-address">-</span></p>
+                    </div>
+                    <button onclick="openEditCustomerModal()" class="text-[11px] px-2.5 py-1 rounded-lg bg-white border border-brand-pinkMedium text-brand-pinkDark font-medium hover:bg-brand-pinkSoft shrink-0">
+                        แก้ไข
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <!-- Rendered via JS -->
+            </div>
+
+            <!-- Quick Add Accessories / Bags Banner inside Cart -->
+            <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 shrink-0">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-xs text-gray-600">อยากแมตช์ลุคให้ปังขึ้นไหมคะ?</span>
+                    <div class="flex gap-1.5">
+                        <button onclick="jumpToCategory('accessories')" class="px-2.5 py-1 rounded-lg bg-brand-pinkSoft hover:bg-brand-pinkMedium text-brand-black text-[11px] font-medium transition">
+                            + แอคเซสเซอรี่
+                        </button>
+                        <button onclick="jumpToCategory('bags')" class="px-2.5 py-1 rounded-lg bg-brand-pinkSoft hover:bg-brand-pinkMedium text-brand-black text-[11px] font-medium transition">
+                            + กระเป๋า
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Footer & Total -->
+            <div class="p-5 bg-white border-t border-gray-200 space-y-3 shrink-0">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">ค่าบริการขับรถจัดส่ง</span>
+                    <span class="text-green-600 font-medium">ฟรี! (โปรโมชั่นเปิดร้าน)</span>
+                </div>
+                <div class="flex items-center justify-between text-lg font-bold text-brand-black pt-2 border-t border-dashed border-gray-200">
+                    <span>ยอดชำระรวมทั้งหมด</span>
+                    <span id="cart-total-price" class="text-brand-pinkDark">0 THB</span>
+                </div>
+
+                <button id="proceed-checkout-btn" onclick="openPaymentModal()" disabled
+                    class="w-full py-3.5 bg-brand-black disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 text-white font-medium rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                    <span>ดำเนินการชำระเงิน (QR Code)</span>
+                    <i data-lucide="qr-code" class="w-4 h-4 text-brand-pinkMedium"></i>
+                </button>
+
+                <p class="text-[11px] text-center text-gray-500">
+                    ติดปัญหาทัก Line: <span class="font-medium text-brand-black">@936ilcuu</span> | IG: <span class="font-medium text-brand-black">swiw.offi</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 4. QR PAYMENT & SLIP UPLOAD MODAL (หน้าชำระเงินและแนบสลิป)               -->
+    <!-- ===================================================================== -->
+    <div id="payment-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden my-auto animate-fade-in border border-brand-pinkMedium">
+            <!-- Header -->
+            <div class="bg-brand-black text-white px-5 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-brand-pinkAccent"></i>
+                    <h3 class="font-semibold text-base">ชำระเงินผ่าน QR Code</h3>
+                </div>
+                <button onclick="closePaymentModal()" class="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Payment Step View -->
+            <div id="payment-step-form" class="p-5 sm:p-6 space-y-5 max-h-[85vh] overflow-y-auto">
+                <!-- Amount Box -->
+                <div class="bg-brand-pinkLight border border-brand-pinkMedium rounded-2xl p-4 text-center">
+                    <p class="text-xs text-gray-600">ยอดเงินที่ต้องโอนชำระทั้งสิ้น</p>
+                    <p id="payment-total-display" class="text-3xl font-bold text-brand-black mt-1">0 THB</p>
+                    <p class="text-[11px] text-brand-pinkDark mt-1">สแกน QR ด้านล่างเพื่อชำระเงินทันที</p>
+                </div>
+
+                <!-- QR Code Graphic Card -->
+                <div class="bg-white border-2 border-brand-black rounded-2xl p-4 text-center shadow-sm relative">
+                    <div class="bg-[#003D6B] text-white text-xs font-semibold py-1.5 rounded-t-xl -mx-4 -mt-4 mb-3 tracking-wider">
+                        THAI QR PAYMENT / PROMPTPAY
+                    </div>
+                    <!-- Generated Stylish SVG QR Code -->
+                    <div class="w-44 h-44 mx-auto bg-white p-2 border border-gray-200 rounded-xl flex items-center justify-center relative">
+                        <svg viewBox="0 0 100 100" class="w-full h-full text-brand-black fill-current">
+                            <!-- Corner Markers -->
+                            <path d="M10,10 h25 v25 h-25 z M15,15 v15 h15 v-15 z M20,20 h5 v5 h-5 z"/>
+                            <path d="M65,10 h25 v25 h-25 z M70,15 v15 h15 v-15 z M75,20 h5 v5 h-5 z"/>
+                            <path d="M10,65 h25 v25 h-25 z M15,70 v15 h15 v-15 z M20,75 h5 v5 h-5 z"/>
+                            <!-- Data Matrix Pattern -->
+                            <rect x="42" y="10" width="5" height="5"/><rect x="52" y="10" width="5" height="10"/>
+                            <rect x="42" y="20" width="5" height="10"/><rect x="10" y="42" width="10" height="5"/>
+                            <rect x="25" y="42" width="5" height="15"/><rect x="35" y="47" width="10" height="5"/>
+                            <rect x="55" y="42" width="15" height="5"/><rect x="75" y="42" width="15" height="5"/>
+                            <rect x="65" y="52" width="5" height="10"/><rect x="80" y="55" width="10" height="10"/>
+                            <rect x="42" y="65" width="10" height="5"/><rect x="58" y="65" width="5" height="15"/>
+                            <rect x="42" y="75" width="5" height="15"/><rect x="68" y="75" width="10" height="5"/>
+                            <rect x="82" y="72" width="8" height="18"/><rect x="52" y="85" width="12" height="5"/>
+                        </svg>
+                        <!-- Center Brand Badge -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="px-2 py-0.5 bg-brand-black text-brand-pinkMedium font-brand text-[10px] font-bold rounded shadow">
+                                SWIW
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-xs font-semibold text-brand-black mt-3">ชื่อบัญชี: ร้าน She wear it well</p>
+                    <p class="text-[11px] text-gray-500">พร้อมเพย์: 099-999-9999 (กสิกรไทย)</p>
+                    <button type="button" onclick="copyText('0999999999', 'คัดลอกเลขพร้อมเพย์ร้านแล้ว')"
+                        class="mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-pinkLight hover:bg-brand-pinkSoft text-brand-pinkDark text-[11px] font-medium transition">
+                        <i data-lucide="copy" class="w-3 h-3"></i> คัดลอกเลขพร้อมเพย์
+                    </button>
+                </div>
+
+                <!-- Mandatory Slip Upload Section -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-brand-black">
+                        แนบรูปภาพสลิปโอนเงิน (จำเป็นต้องอัปโหลดก่อนยืนยัน) <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <div id="slip-upload-box" onclick="document.getElementById('slip-file-input').click()"
+                        class="border-2 border-dashed border-brand-pinkAccent bg-brand-pinkLight/40 hover:bg-brand-pinkLight rounded-2xl p-4 text-center cursor-pointer transition">
+                        <input type="file" id="slip-file-input" accept="image/*" class="hidden" onchange="handleSlipUpload(event)">
+                        
+                        <div id="slip-placeholder" class="py-3 space-y-1.5">
+                            <div class="w-10 h-10 rounded-full bg-brand-pinkSoft text-brand-pinkDark mx-auto flex items-center justify-center">
+                                <i data-lucide="image-plus" class="w-5 h-5"></i>
+                            </div>
+                            <p class="text-xs font-medium text-brand-black">คลิกเพื่อเลือกรูปสลิปจากเครื่อง</p>
+                            <p class="text-[11px] text-gray-400">รองรับไฟล์ JPG, PNG</p>
+                        </div>
+
+                        <!-- Preview Uploaded Image -->
+                        <div id="slip-preview-container" class="hidden space-y-2">
+                            <img id="slip-preview-img" src="" alt="Slip Preview" class="max-h-48 mx-auto rounded-xl shadow border border-gray-200">
+                            <p class="text-[11px] text-green-600 font-medium flex items-center justify-center gap-1">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> อัปโหลดรูปสลิปเรียบร้อยแล้ว (คลิกเพื่อเปลี่ยนรูป)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Booking Button -->
+                <button type="button" id="confirm-payment-btn" onclick="completeBooking()" disabled
+                    class="w-full py-3.5 bg-brand-black disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 text-white font-medium rounded-xl shadow-lg flex items-center justify-center gap-2 transition">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-brand-pinkMedium"></i>
+                    <span>ยืนยันการแจ้งโอนเงินและจองชุด</span>
+                </button>
+            </div>
+
+            <!-- Booking Success View -->
+            <div id="payment-step-success" class="hidden p-6 sm:p-8 text-center space-y-5">
+                <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 mx-auto flex items-center justify-center animate-bounce">
+                    <i data-lucide="check" class="w-8 h-8 stroke-[3]"></i>
+                </div>
+                
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-brand-pinkSoft text-brand-pinkDark text-xs font-semibold">
+                        Order #<span id="success-order-id">SWIW-1024</span>
+                    </span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-brand-black mt-2">
+                        การเช่าสำเร็จ! รอรับชุดได้เลย ✨
+                    </h3>
+                    <p class="text-xs text-gray-600 mt-1">
+                        ทางร้านได้รับยอดชำระและสลิปของคุณเรียบร้อยแล้ว เตรียมตัวสวยได้เลยค่ะ!
+                    </p>
+                </div>
+
+                <div class="bg-brand-pinkLight/80 border border-brand-pinkMedium rounded-2xl p-4 text-left text-xs space-y-2">
+                    <p class="font-semibold text-brand-black border-b border-brand-pinkMedium pb-1.5">สรุปรายละเอียดการจัดส่ง</p>
+                    <p><span class="text-gray-500">ผู้รับ:</span> <span id="success-cust-name" class="font-medium text-brand-black">-</span></p>
+                    <p><span class="text-gray-500">สถานที่จัดส่ง:</span> <span id="success-cust-address" class="font-medium text-brand-black">-</span></p>
+                    <div id="success-items-summary" class="pt-1 border-t border-brand-pinkSoft space-y-1 text-gray-700">
+                        <!-- Summary list -->
+                    </div>
+                </div>
+
+                <div class="bg-brand-black text-white rounded-2xl p-3.5 text-xs space-y-1">
+                    <p class="text-brand-pinkMedium font-medium">หากต้องการสอบถามเพิ่มเติม ทักมาทางร้านได้ที่</p>
+                    <p>Line: <strong>@936ilcuu</strong> | IG: <strong>swiw.offi</strong></p>
+                </div>
+
+                <button type="button" onclick="finishAndResetAfterOrder()"
+                    class="w-full py-3 bg-brand-black hover:bg-gray-800 text-white text-sm font-medium rounded-xl transition">
+                    กลับสู่หน้าร้านค้า
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 5. ADMIN DEMO MODAL (ตัวอย่างระบบหลังบ้านเช็กออเดอร์ลูกค้า)               -->
+    <!-- ===================================================================== -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden my-auto border border-gray-200 max-h-[88vh] flex flex-col">
+            <div class="bg-brand-black text-white px-5 py-4 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-brand-pinkAccent"></i>
+                    <h3 class="font-semibold text-base">หลังบ้านแอดมิน: รายการจองเช่าชุด (She wear it well)</h3>
+                </div>
+                <button onclick="toggleAdminModal()" class="p-1 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="admin-orders-list" class="p-5 overflow-y-auto space-y-4 flex-1 bg-gray-50">
+                <!-- Orders rendered via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT LOGIC                                                      -->
+    <!-- ===================================================================== -->
+    <script>
+        // --- 1. MOCK DATABASE (สินค้าแฟชั่นของร้าน She wear it well) ---
+        const PRODUCTS = [
+            {
+                id: 'set-01',
+                name: 'Velvet Ribbon Rose Set (ชุดเซตโบว์ชมพู)',
+                category: 'set',
+                categoryLabel: 'ชุดเป็นเซต (Set)',
+                shopPrice: 1490,
+                tiers: [
+                    { days: 1, price: 80 },
+                    { days: 2, price: 110 },
+                    { days: 3, price: 140 }
+                ],
+                size: 'S / M',
+                measurements: 'เสื้อ: อก 32-35" ยาว 16" | กระโปรง: เอว 25-28" สะโพก 36" ยาว 15"',
+                description: 'ชุดเซตเสื้อครอปแต่งโบว์กำมะหยี่สีดำแมตช์คู่กระโปรงทรงเอสีชมพูพาสเทล ใส่ไปคาเฟ่หรือดินเนอร์หรูดูแพงมากค่ะ',
+                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+                // วันที่ถูกเช่าแล้ว (รูปแบบ YYYY-MM-DD)
+                bookedDates: []
+            },
+            {
+                id: 'set-02',
+                name: 'Midnight Tweed Chic Set (เซตทวีดคุณหนู)',
+                category: 'set',
+                categoryLabel: 'ชุดเป็นเซต (Set)',
+                shopPrice: 1890,
+                tiers: [
+                    { days: 1, price: 100 },
+                    { days: 2, price: 140 },
+                    { days: 3, price: 180 }
+                ],
+                size: 'Freesize (S-L)',
+                measurements: 'เสื้อคลุม: อก 34-38" | กางเกงกระโปรง: เอว 26-30" สะโพก 38"',
+                description: 'เซตผ้าทวีดทอลายสีดำ-ขาว กระดุมมุกสุดคลาสสิก ถ่ายรูปขึ้นกล้องสุดๆ',
+                image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'top-01',
+                name: 'Coquette Lace Corset Top (เสื้อคอร์เซ็ตลูกไม้)',
+                category: 'tops',
+                categoryLabel: 'ท่อนบน (Tops)',
+                shopPrice: 890,
+                tiers: [
+                    { days: 1, price: 60 },
+                    { days: 2, price: 85 },
+                    { days: 3, price: 110 }
+                ],
+                size: 'S / M',
+                measurements: 'อก 31-35" (ด้านหลังสม็อคยืดได้) ยาว 15"',
+                description: 'เสื้อท่อนบนทรงคอร์เซ็ตเก็บทรงสวย แต่งขอบลูกไม้สีขาวละมุน',
+                image: 'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'top-02',
+                name: 'Off-Shoulder Satin Pink Top (เสื้อปาดไหล่ซาติน)',
+                category: 'tops',
+                categoryLabel: 'ท่อนบน (Tops)',
+                shopPrice: 790,
+                tiers: [
+                    { days: 1, price: 60 },
+                    { days: 2, price: 85 },
+                    { days: 3, price: 105 }
+                ],
+                size: 'Freesize',
+                measurements: 'อก 32-36" ยาว 17"',
+                description: 'เสื้อปาดไหล่ผ้าซาตินสีชมพูอ่อน เล่นแสงไฟยามค่ำคืน ขับผิวออร่าจับ',
+                image: 'https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'bot-01',
+                name: 'Pleated Mini Tennis Skirt (กระโปรงพลีทสีดำ)',
+                category: 'bottoms',
+                categoryLabel: 'ท่อนล่าง (Bottoms)',
+                shopPrice: 690,
+                tiers: [
+                    { days: 1, price: 50 },
+                    { days: 2, price: 75 },
+                    { days: 3, price: 95 }
+                ],
+                size: 'S / M',
+                measurements: 'เอว 25-27" สะโพก 36" ยาว 14.5" (มีซับในกางเกง)',
+                description: 'กระโปรงพลีทเอวสูงสีดำสนิท ทรงสวยพรางหุ่น แมตช์ได้กับทุกเสื้อ',
+                image: 'https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'bot-02',
+                name: 'High-Waist Tailored White Trousers (กางเกงขายาวสีขาว)',
+                category: 'bottoms',
+                categoryLabel: 'ท่อนล่าง (Bottoms)',
+                shopPrice: 990,
+                tiers: [
+                    { days: 1, price: 65 },
+                    { days: 2, price: 90 },
+                    { days: 3, price: 115 }
+                ],
+                size: 'M',
+                measurements: 'เอว 27-28" สะโพก 37-38" ยาว 40"',
+                description: 'กางเกงขายาวทรงกระบอกเล็กสีขาวครีม ผ้าทิ้งตัวไม่บาง ใส่แล้วดูขายาวเพรียว',
+                image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'acc-01',
+                name: 'Pearl Choker & Bow Hairclip Set (เซตสร้อยมุก+กิ๊บโบว์)',
+                category: 'accessories',
+                categoryLabel: 'แอคเซสเซอรี่ (Accessories)',
+                shopPrice: 450,
+                tiers: [
+                    { days: 1, price: 30 },
+                    { days: 2, price: 45 },
+                    { days: 3, price: 60 }
+                ],
+                size: 'Freesize',
+                measurements: 'สร้อยปรับระดับได้ 35-42 cm + กิ๊บติดผมคู่',
+                description: 'เซตเครื่องประดับสร้อยโช้คเกอร์มุกพร้อมกิ๊บโบว์ซาติน เพิ่มความหวานให้คอมพลีทลุค',
+                image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'acc-02',
+                name: 'Vintage Cat-Eye Sunglasses (แว่นกันแดดแฟชั่น)',
+                category: 'accessories',
+                categoryLabel: 'แอคเซสเซอรี่ (Accessories)',
+                shopPrice: 590,
+                tiers: [
+                    { days: 1, price: 35 },
+                    { days: 2, price: 50 },
+                    { days: 3, price: 65 }
+                ],
+                size: 'Freesize',
+                measurements: 'หน้ากว้าง 14.2 cm น้ำหนักเบา',
+                description: 'แว่นกันแดดกรอบดำทรงแคทอาย ไอเทมลับสำหรับถ่ายรูปกลางแจ้งให้ดูเก๋ระดับตัวแม่',
+                image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'bag-01',
+                name: 'Quilted Noir Mini Shoulder Bag (กระเป๋าสะพายไหล่สีดำ)',
+                category: 'bags',
+                categoryLabel: 'กระเป๋า (Bags)',
+                shopPrice: 1590,
+                tiers: [
+                    { days: 1, price: 70 },
+                    { days: 2, price: 100 },
+                    { days: 3, price: 130 }
+                ],
+                size: 'Mini (ใส่ iPhone Pro Max ได้)',
+                measurements: 'กว้าง 20 cm x สูง 13 cm x หนา 6 cm',
+                description: 'กระเป๋าหนังลายควิลท์สีดำอะไหล่เงิน สายโซ่สะพายไหล่สุดหรู',
+                image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            },
+            {
+                id: 'bag-02',
+                name: 'Blush Pink Cloud Clutch (กระเป๋าถือจีบสีชมพูอ่อน)',
+                category: 'bags',
+                categoryLabel: 'กระเป๋า (Bags)',
+                shopPrice: 1290,
+                tiers: [
+                    { days: 1, price: 65 },
+                    { days: 2, price: 90 },
+                    { days: 3, price: 115 }
+                ],
+                size: 'Small-Medium',
+                measurements: 'กว้าง 23 cm x สูง 15 cm',
+                description: 'กระเป๋าทรงนุ่มนิ่มสีชมพูพาสเทล ถือออกงานหรือคาเฟ่ก็เข้ากับชุดง่ายมาก',
+                image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=800&q=80',
+                bookedDates: []
+            }
+        ];
+
+        const CATEGORIES = [
+            { id: 'all', label: 'ทั้งหมด (All)' },
+            { id: 'set', label: 'ชุดเป็นเซต (Set)' },
+            { id: 'tops', label: 'ท่อนบน (Tops)' },
+            { id: 'bottoms', label: 'ท่อนล่าง (Bottoms)' },
+            { id: 'accessories', label: 'แอคเซสเซอรี่' },
+            { id: 'bags', label: 'กระเป๋า (Bags)' }
+        ];
+
+        // --- 2. APPLICATION STATE ---
+        let customerInfo = null;
+        let activeCategory = 'all';
+        let cart = [];
+        let completedOrders = [];
+
+        // Modal & Calendar State
+        let selectedProduct = null;
+        let selectedTierIndex = 0;
+        let selectedStartDate = null; // 'YYYY-MM-DD'
+        let currentCalendarDate = new Date(); // ใช้ควบคุมเดือนที่แสดงในปฏิทิน
+        let uploadedSlipDataUrl = null;
+
+        // --- 3. INITIALIZATION & HELPER FUNCTIONS ---
+        function initDemoBookedDates() {
+            // จำลองวันที่ถูกเช่าแล้วแบบไดนามิกจากวันปัจจุบัน เพื่อให้ปฏิทินดูสมจริงเสมอ
+            const today = new Date();
+            const formatOffset = (offsetDays) => {
+                const d = new Date(today);
+                d.setDate(today.getDate() + offsetDays);
+                return formatDateISO(d);
+            };
+
+            PRODUCTS[0].bookedDates = [formatOffset(2), formatOffset(3), formatOffset(8)];
+            PRODUCTS[1].bookedDates = [formatOffset(1), formatOffset(5), formatOffset(6)];
+            PRODUCTS[2].bookedDates = [formatOffset(4)];
+            PRODUCTS[4].bookedDates = [formatOffset(3), formatOffset(4)];
+            PRODUCTS[8].bookedDates = [formatOffset(2), formatOffset(7)];
+        }
+
+        function formatDateISO(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatThaiDate(isoStr) {
+            if (!isoStr) return '';
+            const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            const [y, m, d] = isoStr.split('-');
+            return `${parseInt(d)} ${months[parseInt(m) - 1]} ${parseInt(y) + 543}`;
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = type === 'error' ? 'bg-red-600 text-white' : (type === 'success' ? 'bg-brand-black text-brand-pinkMedium border border-brand-pinkAccent' : 'bg-brand-black text-white');
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-medium flex items-center justify-center gap-2 animate-fade-in pointer-events-auto text-center`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
+        }
+
+        function copyText(text, successMsg) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(successMsg || `คัดลอก ${text} แล้ว`, 'success');
+        }
+
+        // --- 4. CUSTOMER GATE LOGIC ---
+        document.getElementById('customer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nickname = document.getElementById('input-nickname').value.trim();
+            const phone = document.getElementById('input-phone').value.trim();
+            const address = document.getElementById('input-address').value.trim();
+
+            if (!nickname || !phone || !address) {
+                showToast('กรุณากรอกข้อมูลให้ครบทั้ง 3 ช่องนะคะ', 'error');
+                return;
+            }
+
+            customerInfo = { nickname, phone, address };
+            localStorage.setItem('swiw_customer', JSON.stringify(customerInfo));
+            updateCustomerUI();
+
+            document.getElementById('customer-gate').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('flex');
+            showToast(`ยินดีต้อนรับคุณ ${nickname} เข้าสู่ร้าน She wear it well ค่ะ 💕`, 'success');
+        });
+
+        function updateCustomerUI() {
+            if (!customerInfo) return;
+            document.getElementById('header-customer-name').textContent = `${customerInfo.nickname} (${customerInfo.address})`;
+            document.getElementById('mobile-customer-summary').textContent = `${customerInfo.nickname} • ${customerInfo.address}`;
+            document.getElementById('cart-cust-name').textContent = customerInfo.nickname;
+            document.getElementById('cart-cust-phone').textContent = customerInfo.phone;
+            document.getElementById('cart-cust-address').textContent = customerInfo.address;
+        }
+
+        function openEditCustomerModal() {
+            if (customerInfo) {
+                document.getElementById('input-nickname').value = customerInfo.nickname;
+                document.getElementById('input-phone').value = customerInfo.phone;
+                document.getElementById('input-address').value = customerInfo.address;
+                document.querySelector('#gate-submit-btn span').textContent = 'บันทึกข้อมูลจัดส่ง';
+            }
+            document.getElementById('customer-gate').classList.remove('hidden');
+        }
+
+        // --- 5. CATALOG & CATEGORY RENDERING ---
+        function renderCategories() {
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = CATEGORIES.map(cat => {
+                const isActive = activeCategory === cat.id;
+                return `
+                    <button onclick="selectCategory('${cat.id}')"
+                        class="px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition ${
+                            isActive 
+                            ? 'bg-brand-black text-brand-pinkMedium shadow-sm' 
+                            : 'bg-brand-pinkLight/70 text-gray-700 hover:bg-brand-pinkSoft'
+                        }">
+                        ${cat.label}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectCategory(catId) {
+            activeCategory = catId;
+            const catObj = CATEGORIES.find(c => c.id === catId);
+            document.getElementById('current-category-title').textContent = catObj ? catObj.label : 'รายการสินค้า';
+            renderCategories();
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const visible = PRODUCTS.filter(p => p.active !== false);
+            const filtered = activeCategory === 'all'
+                ? visible
+                : visible.filter(p => p.category === activeCategory);
+
+            document.getElementById('product-count-label').textContent = `${filtered.length} รายการ`;
+
+            grid.innerHTML = filtered.map(product => {
+                const minPrice = product.tiers[0].price;
+                return `
+                    <div onclick="openProductModal('${product.id}')" 
+                        class="group bg-white rounded-2xl border border-gray-100 hover:border-brand-pinkAccent shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <!-- Product Image -->
+                            <div class="relative aspect-[3/4] bg-brand-pinkLight overflow-hidden">
+                                <img src="${product.image}" alt="${product.name}" loading="lazy"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    onerror="this.src='https://placehold.co/600x800/FCE7F3/111111?text=She+wear+it+well'">
+                                
+                                <!-- Category Badge -->
+                                <span class="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-brand-black/80 backdrop-blur-sm text-white text-[10px] font-medium">
+                                    ${product.categoryLabel.split(' ')[0]}
+                                </span>
+
+                                <!-- Size Badge -->
+                                <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-white/90 text-brand-black text-[10px] font-bold shadow-sm">
+                                    ${product.size}
+                                </span>
+
+                                <!-- Original Shop Price Pill -->
+                                <div class="absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg flex items-center justify-between text-[10px]">
+                                    <span class="text-gray-500">ราคาช้อป</span>
+                                    <span class="font-semibold text-gray-800 line-through">${product.shopPrice.toLocaleString()} ฿</span>
+                                </div>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="p-3 sm:p-4">
+                                <h4 class="font-semibold text-xs sm:text-sm text-brand-black line-clamp-1 group-hover:text-brand-pinkDark transition">
+                                    ${product.name}
+                                </h4>
+                                <p class="text-[11px] text-gray-500 line-clamp-1 mt-0.5">
+                                    ${product.measurements}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer: Rental Price & Action -->
+                        <div class="px-3 pb-3 sm:px-4 sm:pb-4 pt-1 flex items-center justify-between border-t border-gray-50">
+                            <div>
+                                <p class="text-[10px] text-gray-400">เช่าเริ่มต้น</p>
+                                <p class="text-sm sm:text-base font-bold text-brand-pinkDark">
+                                    ${minPrice} THB <span class="text-[10px] font-normal text-gray-500">/วัน</span>
+                                </p>
+                            </div>
+                            <span class="px-2.5 py-1.5 rounded-xl bg-brand-pinkSoft group-hover:bg-brand-black text-brand-black group-hover:text-brand-pinkMedium text-[11px] font-medium transition">
+                                เช็กวันว่าง
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- 6. PRODUCT DETAIL MODAL & CALENDAR LOGIC ---
+        function openProductModal(productId) {
+            selectedProduct = PRODUCTS.find(p => p.id === productId);
+            if (!selectedProduct) return;
+
+            selectedTierIndex = 0;
+            selectedStartDate = null;
+            currentCalendarDate = new Date();
+
+            document.getElementById('modal-cat-badge').textContent = selectedProduct.categoryLabel;
+            document.getElementById('modal-img').src = selectedProduct.image;
+            document.getElementById('modal-shop-price').textContent = `${selectedProduct.shopPrice.toLocaleString()} THB`;
+            document.getElementById('modal-size-badge').textContent = selectedProduct.size;
+            document.getElementById('modal-measurements').textContent = selectedProduct.measurements;
+            document.getElementById('modal-title').textContent = selectedProduct.name;
+            document.getElementById('modal-desc').textContent = selectedProduct.description;
+
+            renderRentalTiers();
+            renderCalendar();
+            updateSelectedDateSummary();
+
+            document.getElementById('product-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function renderRentalTiers() {
+            const container = document.getElementById('rental-tiers-container');
+            container.innerHTML = selectedProduct.tiers.map((tier, idx) => {
+                const isSelected = idx === selectedTierIndex;
+                return `
+                    <button type="button" onclick="selectRentalTier(${idx})"
+                        class="p-2.5 rounded-xl border text-center transition ${
+                            isSelected 
+                            ? 'bg-brand-black text-white border-brand-black shadow-md' 
+                            : 'bg-brand-pinkLight/50 text-brand-black border-brand-pinkMedium hover:bg-brand-pinkSoft'
+                        }">
+                        <p class="text-xs font-medium ${isSelected ? 'text-brand-pinkMedium' : 'text-gray-600'}">
+                            ${tier.days} ${tier.days === 1 ? 'Day' : 'Days'}
+                        </p>
+                        <p class="text-sm sm:text-base font-bold mt-0.5">${tier.price} THB</p>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectRentalTier(idx) {
+            selectedTierIndex = idx;
+            renderRentalTiers();
+            // ตรวจสอบว่าถ้ามีวันที่เลือกไว้อยู่แล้ว พอเปลี่ยนจำนวนวันแล้วไปชนวันที่ติดจองหรือไม่
+            if (selectedStartDate) {
+                if (!isRangeAvailable(selectedStartDate, selectedProduct.tiers[selectedTierIndex].days)) {
+                    showToast('จำนวนวันที่เลือกไปชนกับคิวที่ถูกเช่าแล้ว กรุณาเลือกวันเริ่มเช่าใหม่ค่ะ', 'error');
+                    selectedStartDate = null;
+                }
+            }
+            renderCalendar();
+            updateSelectedDateSummary();
+        }
+
+        function changeCalendarMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // คำนวณรายการวันที่ทั้งหมดในช่วงเช่า
+        function getDateRangeArray(startIso, numDays) {
+            const dates = [];
+            const [y, m, d] = startIso.split('-').map(Number);
+            const start = new Date(y, m - 1, d);
+            for (let i = 0; i < numDays; i++) {
+                const next = new Date(start);
+                next.setDate(start.getDate() + i);
+                dates.push(formatDateISO(next));
+            }
+            return dates;
+        }
+
+        // เช็กว่าช่วงวันที่เลือกว่างทั้งหมดหรือไม่
+        function isRangeAvailable(startIso, numDays) {
+            const range = getDateRangeArray(startIso, numDays);
+            return !range.some(dateStr => selectedProduct.bookedDates.includes(dateStr));
+        }
+
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            
+            document.getElementById('calendar-month-label').textContent = `${thaiMonths[month]} ${year + 543}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const selectedRange = selectedStartDate 
+                ? getDateRangeArray(selectedStartDate, selectedProduct.tiers[selectedTierIndex].days) 
+                : [];
+
+            let html = '';
+            // Empty slots before 1st day
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                html += `<div class="p-2"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(year, month, day);
+                const isoStr = formatDateISO(dateObj);
+                const isPast = dateObj < today;
+                const isBooked = selectedProduct.bookedDates.includes(isoStr);
+                const isSelected = selectedRange.includes(isoStr);
+
+                if (isPast) {
+                    html += `<div class="py-2 rounded-lg text-gray-300 bg-gray-50/50 cursor-not-allowed">${day}</div>`;
+                } else if (isBooked) {
+                    html += `<div title="ถูกเช่าแล้ว" class="py-2 rounded-lg bg-red-50 text-red-400 border border-red-200 line-through cursor-not-allowed font-medium">${day}</div>`;
+                } else if (isSelected) {
+                    html += `<button type="button" onclick="handleSelectDate('${isoStr}')" class="py-2 rounded-lg bg-brand-pinkAccent text-brand-black font-bold shadow-sm ring-2 ring-brand-black">${day}</button>`;
+                } else {
+                    html += `<button type="button" onclick="handleSelectDate('${isoStr}')" class="py-2 rounded-lg bg-white hover:bg-brand-pinkSoft text-brand-black border border-gray-100 font-medium transition">${day}</button>`;
+                }
+            }
+
+            document.getElementById('calendar-days-grid').innerHTML = html;
+        }
+
+        function handleSelectDate(isoStr) {
+            const numDays = selectedProduct.tiers[selectedTierIndex].days;
+            if (!isRangeAvailable(isoStr, numDays)) {
+                showToast(`ไม่สามารถเช่า ${numDays} วันเริ่มวันที่นี้ได้ เนื่องจากติดคิวเช่าวันถัดไปค่ะ`, 'error');
+                return;
+            }
+            selectedStartDate = isoStr;
+            renderCalendar();
+            updateSelectedDateSummary();
+        }
+
+        function updateSelectedDateSummary() {
+            const box = document.getElementById('selected-date-summary');
+            const tier = selectedProduct.tiers[selectedTierIndex];
+
+            if (!selectedStartDate) {
+                box.innerHTML = `
+                    <span class="text-gray-600 flex items-center gap-1.5">
+                        <i data-lucide="calendar" class="w-4 h-4 text-brand-pinkDark"></i> กรุณาเลือกวันเริ่มเช่าในปฏิทิน
+                    </span>
+                    <span class="font-bold text-brand-black">${tier.price} THB</span>
+                `;
+            } else {
+                const range = getDateRangeArray(selectedStartDate, tier.days);
+                const endDate = range[range.length - 1];
+                const dateText = tier.days === 1 
+                    ? formatThaiDate(selectedStartDate)
+                    : `${formatThaiDate(selectedStartDate)} - ${formatThaiDate(endDate)}`;
+
+                box.innerHTML = `
+                    <div>
+                        <p class="text-[11px] text-brand-pinkDark font-semibold">วันที่เช่า (${tier.days} ${tier.days === 1 ? 'Day' : 'Days'})</p>
+                        <p class="font-bold text-brand-black">${dateText}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[11px] text-gray-500">ราคาเช่า</p>
+                        <p class="text-base font-bold text-brand-pinkDark">${tier.price} THB</p>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // --- 7. SHOPPING CART LOGIC ---
+        function addCurrentProductToCart(redirectToAccessories) {
+            if (!selectedStartDate) {
+                showToast('กรุณาจิ้มเลือกวันเริ่มเช่าในปฏิทินก่อนนะคะ 📅', 'error');
+                return;
+            }
+
+            const tier = selectedProduct.tiers[selectedTierIndex];
+            const range = getDateRangeArray(selectedStartDate, tier.days);
+            const endDate = range[range.length - 1];
+
+            const cartItem = {
+                cartItemId: 'item-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+                productId: selectedProduct.id,
+                name: selectedProduct.name,
+                category: selectedProduct.category,
+                image: selectedProduct.image,
+                size: selectedProduct.size,
+                days: tier.days,
+                price: tier.price,
+                startDate: selectedStartDate,
+                endDate: endDate,
+                dateRange: range
+            };
+
+            cart.push(cartItem);
+            updateCartUI();
+            closeProductModal();
+
+            if (redirectToAccessories) {
+                selectCategory('accessories');
+                showToast(`เพิ่ม "${selectedProduct.name}" ลงตะกร้าแล้ว! เลือกแอคเซสเซอรี่เพิ่มได้เลยค่ะ ✨`, 'success');
+            } else {
+                showToast(`เพิ่ม "${selectedProduct.name}" ลงตะกร้าเรียบร้อยแล้ว 🛍️`, 'success');
+                openCartDrawer();
+            }
+        }
+
+        function removeCartItem(cartItemId) {
+            cart = cart.filter(item => item.cartItemId !== cartItemId);
+            updateCartUI();
+            showToast('ลบรายการออกจากตะกร้าแล้ว');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count-badge').textContent = cart.length;
+            const container = document.getElementById('cart-items-container');
+            const checkoutBtn = document.getElementById('proceed-checkout-btn');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12 px-4">
+                        <div class="w-16 h-16 rounded-full bg-brand-pinkLight text-brand-pinkAccent flex items-center justify-center mb-3">
+                            <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+                        </div>
+                        <p class="font-semibold text-brand-black">ตะกร้าของคุณยังว่างอยู่ค่ะ</p>
+                        <p class="text-xs text-gray-500 mt-1">เลือกชุดสวยๆ หรือแอคเซสเซอรี่ที่ถูกใจลงตะกร้าได้เลย</p>
+                        <button onclick="closeCartDrawer()" class="mt-4 px-5 py-2 rounded-xl bg-brand-black text-white text-xs font-medium">
+                            ไปเลือกชมชุด
+                        </button>
+                    </div>
+                `;
+                document.getElementById('cart-total-price').textContent = '0 THB';
+                checkoutBtn.disabled = true;
+            } else {
+                let total = 0;
+                container.innerHTML = cart.map(item => {
+                    total += item.price;
+                    const dateLabel = item.days === 1 
+                        ? formatThaiDate(item.startDate)
+                        : `${formatThaiDate(item.startDate)} - ${formatThaiDate(item.endDate)}`;
+
+                    return `
+                        <div class="bg-white border border-gray-100 rounded-2xl p-3 flex gap-3 shadow-sm">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-xl bg-brand-pinkLight shrink-0"
+                                onerror="this.src='https://placehold.co/200x260/FCE7F3/111111?text=SWIW'">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-1">
+                                    <h4 class="text-xs font-semibold text-brand-black truncate">${item.name}</h4>
+                                    <button onclick="removeCartItem('${item.cartItemId}')" class="text-gray-400 hover:text-red-500 p-0.5">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                                <p class="text-[11px] text-gray-500 mt-0.5">ไซส์: ${item.size} • เช่า ${item.days} ${item.days === 1 ? 'Day' : 'Days'}</p>
+                                <p class="text-[11px] text-brand-pinkDark font-medium mt-0.5">📅 ${dateLabel}</p>
+                                <p class="text-sm font-bold text-brand-black mt-1">${item.price} THB</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('cart-total-price').textContent = `${total.toLocaleString()} THB`;
+                checkoutBtn.disabled = false;
+            }
+            lucide.createIcons();
+        }
+
+        function openCartDrawer() {
+            updateCartUI();
+            document.getElementById('cart-drawer').classList.remove('hidden');
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cart-drawer').classList.add('hidden');
+        }
+
+        function jumpToCategory(catId) {
+            closeCartDrawer();
+            selectCategory(catId);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 8. QR PAYMENT & SLIP UPLOAD LOGIC ---
+        function openPaymentModal() {
+            if (cart.length === 0) return;
+            closeCartDrawer();
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('payment-total-display').textContent = `${total.toLocaleString()} THB`;
+
+            // Reset Payment Modal State
+            uploadedSlipDataUrl = null;
+            document.getElementById('slip-file-input').value = '';
+            document.getElementById('slip-placeholder').classList.remove('hidden');
+            document.getElementById('slip-preview-container').classList.add('hidden');
+            document.getElementById('confirm-payment-btn').disabled = true;
+
+            document.getElementById('payment-step-form').classList.remove('hidden');
+            document.getElementById('payment-step-success').classList.add('hidden');
+
+            document.getElementById('payment-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        function handleSlipUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast('กรุณาอัปโหลดเป็นไฟล์รูปภาพเท่านั้นนะคะ', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedSlipDataUrl = e.target.result;
+                document.getElementById('slip-preview-img').src = uploadedSlipDataUrl;
+                document.getElementById('slip-placeholder').classList.add('hidden');
+                document.getElementById('slip-preview-container').classList.remove('hidden');
+                document.getElementById('confirm-payment-btn').disabled = false;
+                showToast('แนบสลิปเรียบร้อย กดยืนยันการจองได้เลยค่ะ ✨', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function completeBooking() {
+            if (!uploadedSlipDataUrl) {
+                showToast('กรุณาอัปโหลดรูปภาพสลิปโอนเงินก่อนยืนยันนะคะ', 'error');
+                return;
+            }
+
+            const orderId = 'SWIW-' + Math.floor(1000 + Math.random() * 9000);
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            // ล็อกวันที่ถูกเช่าในระบบสินค้าทันที (Real-time calendar update)
+            cart.forEach(item => {
+                const prod = PRODUCTS.find(p => p.id === item.productId);
+                if (prod) {
+                    prod.bookedDates.push(...item.dateRange);
+                }
+            });
+
+            // บันทึกออเดอร์เข้าสู่หลังบ้านแอดมิน
+            const newOrder = {
+                orderId,
+                timestamp: new Date().toLocaleString('th-TH'),
+                customer: { ...customerInfo },
+                items: [...cart],
+                total,
+                slipImage: uploadedSlipDataUrl,
+                status: 0
+            };
+            completedOrders.unshift(newOrder);
+
+            // แสดงข้อมูลในหน้า Booking Success
+            document.getElementById('success-order-id').textContent = orderId;
+            document.getElementById('success-cust-name').textContent = `${customerInfo.nickname} (${customerInfo.phone})`;
+            document.getElementById('success-cust-address').textContent = customerInfo.address;
+            document.getElementById('success-items-summary').innerHTML = cart.map(item => `
+                <div class="flex justify-between">
+                    <span>• ${item.name} (${item.days} วัน)</span>
+                    <span class="font-medium">${item.price} ฿</span>
+                </div>
+            `).join('') + `
+                <div class="flex justify-between font-bold text-brand-black pt-1 border-t border-brand-pinkMedium">
+                    <span>ยอดชำระรวม</span>
+                    <span>${total.toLocaleString()} THB</span>
+                </div>
+            `;
+
+            // ล้างตะกร้า
+            cart = [];
+            updateCartUI();
+
+            // สลับหน้าเป็น Success
+            document.getElementById('payment-step-form').classList.add('hidden');
+            document.getElementById('payment-step-success').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function finishAndResetAfterOrder() {
+            closePaymentModal();
+            renderProducts();
+        }
+
+        // --- 8.5 ROLE SELECT / LOGOUT ---
+        function selectRole(role) {
+            document.getElementById('role-screen').classList.add('hidden');
+            if (role === 'buyer') {
+                document.getElementById('customer-gate').classList.remove('hidden');
+            } else {
+                document.getElementById('seller-app').classList.remove('hidden');
+                document.getElementById('seller-app').classList.add('flex');
+                renderSeller();
+                showToast('เข้าสู่ระบบในฐานะผู้ขายแล้วค่ะ', 'success');
+            }
+            lucide.createIcons();
+        }
+
+        function logout() {
+            ['customer-gate', 'seller-app', 'main-app', 'product-modal', 'cart-drawer', 'payment-modal', 'admin-modal']
+                .forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('main-app').classList.remove('flex');
+            document.getElementById('seller-app').classList.remove('flex');
+            document.getElementById('role-screen').classList.remove('hidden');
+            window.scrollTo({ top: 0 });
+        }
+
+        // --- 8.6 SELLER DASHBOARD ---
+        const ORDER_STATUS = ['รอตรวจสลิป', 'ยืนยันแล้ว', 'กำลังจัดส่ง', 'ส่งมอบแล้ว', 'คืนชุดแล้ว'];
+        const STATUS_STYLE = [
+            'bg-amber-100 text-amber-700', 'bg-blue-100 text-blue-700',
+            'bg-purple-100 text-purple-700', 'bg-green-100 text-green-700', 'bg-gray-200 text-gray-700'
+        ];
+        let sellerTab = 'orders';
+
+        function setSellerTab(tab) { sellerTab = tab; renderSeller(); }
+
+        function advanceOrder(orderId) {
+            const o = completedOrders.find(x => x.orderId === orderId);
+            if (o && o.status < ORDER_STATUS.length - 1) { o.status++; renderSeller(); showToast(`อัปเดต ${orderId}: ${ORDER_STATUS[o.status]}`, 'success'); }
+        }
+
+        function toggleProductActive(id) {
+            const p = PRODUCTS.find(x => x.id === id);
+            if (!p) return;
+            p.active = p.active === false ? true : false;
+            renderProducts();
+            renderSeller();
+        }
+
+        function renderSeller() {
+            const revenue = completedOrders.reduce((s, o) => s + o.total, 0);
+            const pending = completedOrders.filter(o => o.status === 0).length;
+            const itemCount = completedOrders.reduce((s, o) => s + o.items.length, 0);
+            const stat = (label, val, color) => `
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+                    <p class="text-[11px] text-gray-500">${label}</p>
+                    <p class="text-2xl font-bold mt-1 ${color}">${val}</p>
+                </div>`;
+            document.getElementById('seller-stats').innerHTML =
+                stat('ออเดอร์ทั้งหมด', completedOrders.length, 'text-brand-black') +
+                stat('รอตรวจสลิป', pending, 'text-amber-600') +
+                stat('ชิ้นที่ถูกเช่า', itemCount, 'text-brand-black') +
+                stat('รายได้รวม (THB)', revenue.toLocaleString(), 'text-brand-pinkDark');
+
+            const tabCls = (on) => on ? 'bg-brand-black text-brand-pinkMedium' : 'bg-white text-gray-700 border border-gray-200 hover:bg-brand-pinkSoft';
+            const t1 = document.getElementById('stab-orders'), t2 = document.getElementById('stab-products');
+            t1.textContent = `ออเดอร์ (${completedOrders.length})`;
+            t2.textContent = `สินค้า & คิวจอง (${PRODUCTS.length})`;
+            t1.className = `px-4 py-2 rounded-full text-sm font-medium transition ${tabCls(sellerTab === 'orders')}`;
+            t2.className = `px-4 py-2 rounded-full text-sm font-medium transition ${tabCls(sellerTab === 'products')}`;
+
+            const box = document.getElementById('seller-content');
+            if (sellerTab === 'orders') {
+                if (completedOrders.length === 0) {
+                    box.innerHTML = `<div class="bg-white rounded-2xl border border-gray-100 text-center py-14 text-sm text-gray-500">ยังไม่มีออเดอร์เข้ามาค่ะ</div>`;
+                } else {
+                    box.innerHTML = completedOrders.map(order => `
+                        <div class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2">
+                                <div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-brand-black text-brand-pinkMedium text-xs font-bold">${order.orderId}</span>
+                                    <span class="text-[11px] text-gray-400 ml-2">${order.timestamp}</span>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_STYLE[order.status]}">${ORDER_STATUS[order.status]}</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                                <div class="sm:col-span-2 space-y-1.5">
+                                    <p><strong>ลูกค้า:</strong> ${order.customer.nickname} (${order.customer.phone})</p>
+                                    <p><strong>ที่อยู่จัดส่ง:</strong> ${order.customer.address}</p>
+                                    <div class="bg-brand-pinkLight/60 p-2.5 rounded-xl space-y-1 mt-2">
+                                        ${order.items.map(it => `<p>• ${it.name} (${it.days} วัน: ${formatThaiDate(it.startDate)}${it.days > 1 ? ' - ' + formatThaiDate(it.endDate) : ''}) - <strong>${it.price} ฿</strong></p>`).join('')}
+                                    </div>
+                                    <p class="text-sm font-bold text-brand-pinkDark pt-1">ยอดรวม: ${order.total.toLocaleString()} THB</p>
+                                </div>
+                                <div class="text-center border-t sm:border-t-0 sm:border-l border-gray-100 pt-2 sm:pt-0 sm:pl-3">
+                                    <p class="text-[11px] text-gray-500 mb-1">หลักฐานสลิปโอนเงิน</p>
+                                    <img src="${order.slipImage}" alt="Slip" class="max-h-32 mx-auto rounded-lg border border-gray-200 shadow-sm">
+                                </div>
+                            </div>
+                            ${order.status < ORDER_STATUS.length - 1 ? `
+                            <div class="flex justify-end">
+                                <button onclick="advanceOrder('${order.orderId}')" class="px-4 py-2 rounded-xl bg-brand-black hover:bg-gray-800 text-white text-xs font-medium transition">
+                                    ${order.status === 0 ? 'ตรวจสลิปแล้ว • ยืนยันออเดอร์' : 'เปลี่ยนสถานะเป็น: ' + ORDER_STATUS[order.status + 1]} →
+                                </button>
+                            </div>` : ''}
+                        </div>
+                    `).join('');
+                }
+            } else {
+                const todayIso = formatDateISO(new Date());
+                box.innerHTML = `<div class="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-100">` +
+                    PRODUCTS.map(p => {
+                        const upcoming = p.bookedDates.filter(d => d >= todayIso).sort();
+                        const on = p.active !== false;
+                        return `
+                        <div class="p-3 sm:p-4 flex items-center gap-3">
+                            <img src="${p.image}" class="w-12 h-16 object-cover rounded-lg bg-brand-pinkLight shrink-0" onerror="this.src='https://placehold.co/200x260/FCE7F3/111111?text=SWIW'">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-brand-black truncate">${p.name}</p>
+                                <p class="text-[11px] text-gray-500">${p.categoryLabel} • ไซส์ ${p.size} • เช่าเริ่มต้น ${p.tiers[0].price} THB/วัน</p>
+                                <p class="text-[11px] mt-0.5 ${upcoming.length ? 'text-red-500' : 'text-green-600'}">
+                                    ${upcoming.length ? `ติดจอง ${upcoming.length} วัน (ถัดไป ${formatThaiDate(upcoming[0])})` : 'ว่างทุกวัน'}
+                                </p>
+                            </div>
+                            <button onclick="toggleProductActive('${p.id}')" class="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold transition ${on ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}">
+                                ${on ? 'เปิดให้เช่า' : 'ปิดอยู่'}
+                            </button>
+                        </div>`;
+                    }).join('') + `</div>`;
+            }
+            lucide.createIcons();
+        }
+
+        // --- 9. ADMIN DEMO MODAL ---
+        function toggleAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            const isHidden = modal.classList.contains('hidden');
+            if (isHidden) {
+                renderAdminOrders();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        function renderAdminOrders() {
+            const list = document.getElementById('admin-orders-list');
+            if (completedOrders.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-12 text-gray-500 text-sm">
+                        <p class="font-medium text-brand-black">ยังไม่มีรายการออเดอร์เข้ามาในรอบนี้ค่ะ</p>
+                        <p class="text-xs mt-1">ลองกดเช่าชุด จ่ายเงินผ่าน QR และอัปโหลดสลิป รายการจะมาโชว์ที่หน้านี้ทันที!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = completedOrders.map(order => `
+                <div class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-2">
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-brand-black text-brand-pinkMedium text-xs font-bold">${order.orderId}</span>
+                            <span class="text-[11px] text-gray-400 ml-2">${order.timestamp}</span>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">ชำระเงินแล้ว</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div class="sm:col-span-2 space-y-1.5">
+                            <p><strong class="text-brand-black">ลูกค้า:</strong> ${order.customer.nickname} (${order.customer.phone})</p>
+                            <p><strong class="text-brand-black">ที่อยู่จัดส่ง:</strong> ${order.customer.address}</p>
+                            <div class="bg-brand-pinkLight/60 p-2.5 rounded-xl space-y-1 mt-2">
+                                ${order.items.map(it => `
+                                    <p>• ${it.name} (${it.days} วัน: ${formatThaiDate(it.startDate)}) - <strong>${it.price} ฿</strong></p>
+                                `).join('')}
+                            </div>
+                            <p class="text-sm font-bold text-brand-pinkDark pt-1">ยอดรวม: ${order.total.toLocaleString()} THB</p>
+                        </div>
+                        <div class="text-center border-t sm:border-t-0 sm:border-l border-gray-100 pt-2 sm:pt-0 sm:pl-3">
+                            <p class="text-[11px] text-gray-500 mb-1">หลักฐานสลิปโอนเงิน</p>
+                            <img src="${order.slipImage}" alt="Slip" class="max-h-32 mx-auto rounded-lg border border-gray-200 shadow-sm">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- BOOTSTRAP APP ---
+        window.onload = function() {
+            initDemoBookedDates();
+            // ออเดอร์ตัวอย่าง เพื่อให้หน้าผู้ขายไม่ว่างตอนสาธิต
+            completedOrders.push({
+                orderId: 'SWIW-1001',
+                timestamp: new Date().toLocaleString('th-TH'),
+                customer: { nickname: 'น้องมายด์', phone: '089-123-4567', address: 'หอพักบ้านสวน ห้อง 304' },
+                items: [{ name: PRODUCTS[0].name, days: 2, price: 110, startDate: PRODUCTS[0].bookedDates[0], endDate: PRODUCTS[0].bookedDates[1] }],
+                total: 110,
+                slipImage: 'https://placehold.co/300x400/FCE7F3/111111?text=Slip',
+                status: 0
+            });
+            renderCategories();
+            renderProducts();
+            lucide.createIcons();
+
+            // ตรวจสอบว่าเคยกรอกข้อมูลลูกค้าไว้ในเครื่องหรือยัง (ถ้าเคยกรอก จะดึงมาเติมให้แก้ไขอัตโนมัติ)
+            const savedCust = localStorage.getItem('swiw_customer');
+            if (savedCust) {
+                try {
+                    const parsed = JSON.parse(savedCust);
+                    document.getElementById('input-nickname').value = parsed.nickname || '';
+                    document.getElementById('input-phone').value = parsed.phone || '';
+                    document.getElementById('input-address').value = parsed.address || '';
+                } catch (e) {}
+            }
+        };
+    </script>
+</body>
+</html>
